@@ -19,7 +19,7 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
 			this.logger = logger;
 		}
 
-		[BasicAuthorize("grupo-exito.com")]
+		[BasicAuthorize("edisongarcia.com")]
 		[HttpPost]
 		public async Task<IActionResult> PostAsync([FromBody] Models.Proxy.RequestData requestData)
 		{
