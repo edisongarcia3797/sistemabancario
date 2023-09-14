@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Satrack.Integracion.SistemaBancario
+﻿namespace Satrack.Integracion.SistemaBancario
 {
 	public interface IServiceSettings
 	{
