@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -17,7 +18,8 @@ namespace Satrack.Integracion.SistemaBancario
 							System.Environment.SetEnvironmentVariable("Log4NetFilename", System.Net.Dns.GetHostName());
 						})
 						.ConfigureLogging(LogginConfigure)
-						.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+						.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                        .ConfigureServices(services => services.AddHostedService<GenerateInterestHostedService>());
 
 		public static void LogginConfigure(ILoggingBuilder loggingBuilder)
 		{
