@@ -68,7 +68,7 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                     if (tuple.response)
                         return Ok(GetResponse(true, string.Format("El producto se ha creado exitosamente para el cliente: {0}", requestData.IdentificacionCliente), null));
                     else
-                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}", requestData.IdentificacionCliente), tuple.message));
+                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}. -> {1}", requestData.IdentificacionCliente, tuple.message), null));
                 }
                 catch (Exception ex)
                 {
@@ -102,7 +102,7 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                     if (tuple.response)
                         return Ok(GetResponse(true, string.Format("Transacción exitosa para el producto: {0}", requestData.NumeroProducto), null));
                     else
-                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error en la transacción para el producto: {0}", requestData.NumeroProducto), tuple.message));
+                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error en la transacción para el producto: {0}. -> {1}", requestData.NumeroProducto, tuple.message), null));
                 }
                 catch (Exception ex)
                 {
