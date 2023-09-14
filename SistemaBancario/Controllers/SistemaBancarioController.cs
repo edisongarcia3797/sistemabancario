@@ -14,17 +14,19 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
     public class SistemaBancarioController : ControllerBase
     {
         private readonly IServiciosSistemaBancario serviciosSistemaBancario;
+        private readonly IOutputCacheStore outputCacheStore;
         private readonly ILogger<SistemaBancarioController> logger;
 
-        public SistemaBancarioController(IServiceSettings serviceSettings, DbContextOptions<SistemaBancarioContext> dbContextOptions, ILogger<SistemaBancarioController> logger)
+        public SistemaBancarioController(IServiceSettings serviceSettings, DbContextOptions<SistemaBancarioContext> dbContextOptions, IOutputCacheStore outputCacheStore, ILogger<SistemaBancarioController> logger)
         {
             this.serviciosSistemaBancario = new ServiciosSistemaBancario(serviceSettings, dbContextOptions, logger);
+            this.outputCacheStore = outputCacheStore;
             this.logger = logger;
         }
 
         [BasicAuthorize("edisongarcia.com")]
         [HttpGet]
-        [OutputCache(Duration = 1000)]
+        [OutputCache(PolicyName = "clienteProducto")]
         public async Task<IActionResult> QueryProducts([FromBody] Models.Proxy.RequestData requestData)
         {
             if (ModelState.IsValid)
@@ -66,9 +68,11 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                     var tuple = await this.serviciosSistemaBancario.OpenProducts(requestOpenProduct);
 
                     if (tuple.response)
+                    {
+                        await this.outputCacheStore.EvictByTagAsync("clienteProducto", default);
                         return Ok(GetResponse(true, string.Format("El producto se ha creado exitosamente para el cliente: {0}", requestData.IdentificacionCliente), null));
-                    else
-                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}. -> {1}", requestData.IdentificacionCliente, tuple.message), null));
+                    }
+                    else return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}. -> {1}", requestData.IdentificacionCliente, tuple.message), null));
                 }
                 catch (Exception ex)
                 {

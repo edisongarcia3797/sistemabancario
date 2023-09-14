@@ -44,6 +44,10 @@ namespace Satrack.Integracion.SistemaBancario
             IServiceSettings serviceSettings = new ServiceSettings();
             Configuration.Bind("ServiceSettings", serviceSettings);
             services.AddSingleton(serviceSettings);
+			services.AddOutputCache(opciones =>
+			{
+				opciones.AddPolicy("clienteProducto", builder => builder.Expire(TimeSpan.FromSeconds(30)).Tag("clienteProducto"));
+			});
 
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 			services.AddOptions();
@@ -54,6 +58,7 @@ namespace Satrack.Integracion.SistemaBancario
 			if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 			app.UseRouting();
 			app.UseAuthorization();
+			app.UseOutputCache();
 				
 			app.UseEndpoints(endpoints =>
 			{
