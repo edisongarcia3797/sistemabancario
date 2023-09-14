@@ -63,10 +63,12 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                         Saldo = requestData.Saldo,
                     };
 
-                    if (await this.serviciosSistemaBancario.OpenProducts(requestOpenProduct))
+                    var tuple = await this.serviciosSistemaBancario.OpenProducts(requestOpenProduct);
+
+                    if (tuple.response)
                         return Ok(GetResponse(true, string.Format("El producto se ha creado exitosamente para el cliente: {0}", requestData.IdentificacionCliente), null));
                     else
-                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}", requestData.IdentificacionCliente), null));
+                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}", requestData.IdentificacionCliente), tuple.message));
                 }
                 catch (Exception ex)
                 {

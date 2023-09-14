@@ -36,9 +36,10 @@ namespace Satrack.Integracion.SistemaBancario
 			return responseData;
 		}
 
-        public async Task<bool> OpenProducts(Models.Services.DataBase.ClienteProducto requestData)
+        public async Task<(bool response, string message)> OpenProducts(Models.Services.DataBase.ClienteProducto requestData)
         {
             bool response = false;
+            string message = string.Empty;
             try
             {
                 SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
@@ -51,10 +52,18 @@ namespace Satrack.Integracion.SistemaBancario
                     DbType = System.Data.DbType.Int32,
                     Direction = System.Data.ParameterDirection.Output
                 };
+                SqlParameter messageError = new()
+                {
+                    ParameterName = "@messageError",
+                    DbType = System.Data.DbType.String,
+                    Direction = System.Data.ParameterDirection.Output,
+                    Size = 2000
+                };
 
-                string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@saldo,@result OUTPUT";
-                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, saldo, result);
+                string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@saldo,@result OUTPUT,@messageError OUTPUT";
+                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, saldo, result, messageError);
                 if (int.Parse(result.Value.ToString()) > 0) response = true;
+                message = messageError.Value.ToString();
             }
             catch (Exception ex)
             {
@@ -62,7 +71,7 @@ namespace Satrack.Integracion.SistemaBancario
                 response = false;
             }
 
-            return response;
+            return (response, message);
         }
 
         public async Task<(bool response, string message)> Transaction(Models.Services.DataBase.Transaccion requestData)

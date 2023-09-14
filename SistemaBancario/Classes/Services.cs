@@ -10,7 +10,7 @@ namespace Satrack.Integracion.SistemaBancario
     public interface IServiciosSistemaBancario
     {
         Task<List<Models.Services.SistemaBancario.ResponseQueryProducts>> QueryProducts(Models.Services.SistemaBancario.RequestData requestData);
-        Task<bool> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts);
+        Task<(bool response, string message)> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts);
         Task<(bool response, string message)> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction);
     }
 
@@ -48,7 +48,7 @@ namespace Satrack.Integracion.SistemaBancario
             return responseData;
         }
 
-        public async Task<bool> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts)
+        public async Task<(bool response, string message)> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts)
         {
             DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
 
