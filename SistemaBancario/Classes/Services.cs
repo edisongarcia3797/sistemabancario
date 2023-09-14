@@ -39,6 +39,7 @@ namespace Satrack.Integracion.SistemaBancario
                 responseData.Add(new Models.Services.SistemaBancario.ResponseQueryProducts
                 {
                     NombreCliente = item.NombreCliente,
+                    TipoCliente = item.TipoCliente,
                     NumeroProducto = item.NumeroProducto,
                     NombreProducto = item.NombreProducto,
                     Saldo = item.Saldo,
