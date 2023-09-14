@@ -82,9 +82,16 @@ namespace Satrack.Integracion.SistemaBancario
                     DbType = System.Data.DbType.Int32,
                     Direction = System.Data.ParameterDirection.Output
                 };
+                SqlParameter messageError = new()
+                {
+                    ParameterName = "@messageError",
+                    DbType = System.Data.DbType.String,
+                    Direction = System.Data.ParameterDirection.Output,
+                    Size = 2000
+                };
 
-                string sqlString = "InsertTransaccion @numeroProducto,@fechaTrasaccion,@id_TipoMovimiento,@porcentajeInteres,@valor,@saldo,@result OUTPUT";
-                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, fechaTrasaccion, id_TipoMovimiento, porcentajeInteres, valor, saldo, result);
+                string sqlString = "InsertTransaccion @numeroProducto,@fechaTrasaccion,@id_TipoMovimiento,@porcentajeInteres,@valor,@saldo,@result OUTPUT,@messageError OUTPUT";
+                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, fechaTrasaccion, id_TipoMovimiento, porcentajeInteres, valor, saldo, result, messageError);
                 if (int.Parse(result.Value.ToString()) > 0) response = true;
             }
             catch (Exception ex)
