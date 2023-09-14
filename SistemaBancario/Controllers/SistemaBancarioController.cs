@@ -33,9 +33,11 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                 try
                 {
                     var productos = await this.serviciosSistemaBancario.ConsultarProductos(new Models.Services.SistemaBancario.RequestData { IdentificacionCliente = requestData.IdentificacionCliente });
+                    
                     if (productos.Any()) 
                         return Ok(GetResponse(true, string.Format("Transacción exitosa para el cliente: {0}", requestData.IdentificacionCliente), productos));
-                    else return NotFound(GetResponse(false, string.Format("No hay resultado en la consulta de productos para el cliente: {0}", requestData.IdentificacionCliente), null));
+                    else 
+                        return NotFound(GetResponse(false, string.Format("No hay resultado en la consulta de productos para el cliente: {0}", requestData.IdentificacionCliente), null));
                 }
                 catch (Exception ex)
                 {
