@@ -8,15 +8,22 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
 {
     public class RequestData
     {
-        [JsonProperty("identificacionCliente")] public long? IdentificacionCliente { get; set; }
+        [JsonProperty("identificacionCliente")] public long IdentificacionCliente { get; set; }
     }
 
-    public class RespuestaClienteProductos
+    public class ResponseQueryProducts
     {
         [JsonProperty("nombre", Order = 1)] public string NombreCliente { get; set; }
         [JsonProperty("numeroProducto", Order = 2)] public long NumeroProducto { get; set; }
         [JsonProperty("producto", Order = 3)] public string NombreProducto { get; set; }
         [JsonProperty("saldo", Order = 3)] public double Saldo { get; set; }
+    }
+
+    public class RequestOpenProduct : RequestData
+    {
+        [JsonProperty("numeroProducto", Order = 2)] public long NumeroProducto { get; set; }
+        [JsonProperty("tipoProducto", Order = 3)] public int TipoProducto { get; set; }
+        [JsonProperty("saldo", Order = 4)] public double Saldo { get; set; }
     }
 }
 
@@ -37,13 +44,12 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
         [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
     }
 
-    //[Keyless]
-    //public class Transaccion 
-    //{
-    //    [Column("id_TipoProducto", TypeName = "int")] public int IdTipoProducto { get; set; }
-    //    [Column("fechaTrasaccion", TypeName = "DateTime")] public DateTime FechaTrasaccion { get; set; }
-    //    [Column("id_TipoMovimiento", TypeName = "int")] public int IdTipoMovimiento { get; set; }
-    //    [Column("porcentajeInteres", TypeName = "numeric")] public int PorcentajeInteres { get; set; }
-    //    [Column("valor", TypeName = "numeric")] public int Valor { get; set; }
-    //}
+    public class ClienteProducto
+    {
+        [Key][Column("id", TypeName = "int")] public int Id { get; set; }
+        [Column("numeroProducto", TypeName = "bigint")] public long NumeroProducto { get; set; }
+        [Column("identificacionCliente", TypeName = "bigint")] public long IdentificacionCliente { get; set; }
+        [Column("id_TipoProducto", TypeName = "int")] public int IdTipoProducto { get; set; }
+        [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
+    }
 }

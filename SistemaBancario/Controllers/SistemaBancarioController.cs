@@ -1,5 +1,4 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
@@ -26,13 +25,13 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
         [BasicAuthorize("edisongarcia.com")]
         [HttpGet]
         [OutputCache(Duration = 1000)]
-        public async Task<IActionResult> ConsultarProductos([FromBody] Models.Proxy.RequestData requestData)
+        public async Task<IActionResult> QueryProducts([FromBody] Models.Proxy.RequestData requestData)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var productos = await this.serviciosSistemaBancario.ConsultarProductos(new Models.Services.SistemaBancario.RequestData { IdentificacionCliente = requestData.IdentificacionCliente });
+                    var productos = await this.serviciosSistemaBancario.QueryProducts(new Models.Services.SistemaBancario.RequestData { IdentificacionCliente = (long)requestData.IdentificacionCliente });
                     
                     if (productos.Any()) 
                         return Ok(GetResponse(true, string.Format("Transacción exitosa para el cliente: {0}", requestData.IdentificacionCliente), productos));
@@ -50,31 +49,27 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
 
         [BasicAuthorize("edisongarcia.com")]
         [HttpPost]
-        public async Task<IActionResult> AbrirProducto([FromBody] Models.Proxy.RequestData requestData)
+        public async Task<IActionResult> OpenProducts([FromBody] Models.Proxy.RequestOpenProduct requestData)
         {
             if (ModelState.IsValid)
             {
-                Models.Proxy.ResponseData responseData;
                 try
                 {
-                    responseData = new Models.Proxy.ResponseData
+                    Models.Services.SistemaBancario.RequestOpenProduct requestOpenProduct = new()
                     {
-                        Response = true,
-                        Message = "Success",
-                        MessageDetail = string.Format("Transacción exitosa para el cliente {0}", requestData.IdentificacionCliente)
+                        IdentificacionCliente = (long)requestData.IdentificacionCliente,
+                        NumeroProducto = (long)requestData.NumeroProducto,
+                        TipoProducto = (int)requestData.TipoProducto,
+                        Saldo = requestData.Saldo,
                     };
-                    return Ok(responseData);
+
+                    await this.serviciosSistemaBancario.OpenProducts(requestOpenProduct);
+                    return Ok(GetResponse(true, string.Format("El producto se ha creado exitosamente para el cliente: {0}", requestData.IdentificacionCliente), null));
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine(ex.Message);
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = false,
-                        Message = "failed",
-                        MessageDetail = string.Format("Error en la transacción para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return StatusCode(StatusCodes.Status500InternalServerError, responseData);
+                    logger.LogError("[SistemaBancario] {ex.Message}", ex.Message);
+                    return StatusCode(StatusCodes.Status500InternalServerError, GetResponse(false, string.Format("Error en la transacción para el cliente {0}", requestData.IdentificacionCliente), null));
                 }
             }
             else
@@ -82,119 +77,11 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                 return BadRequest(ModelState);
             }
         }
-
-        [BasicAuthorize("edisongarcia.com")]
-        [HttpPost]
-        public async Task<IActionResult> DepositoRetiroo([FromBody] Models.Proxy.RequestData requestData)
-        {
-            if (ModelState.IsValid)
-            {
-                Models.Proxy.ResponseData responseData;
-                try
-                {
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = true,
-                        Message = "Success",
-                        MessageDetail = string.Format("Transacción exitosa para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return Ok(responseData);
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine(ex.Message);
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = false,
-                        Message = "failed",
-                        MessageDetail = string.Format("Error en la transacción para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return StatusCode(StatusCodes.Status500InternalServerError, responseData);
-                }
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-
-        [BasicAuthorize("edisongarcia.com")]
-        [HttpPost]
-        public async Task<IActionResult> Cancelacion([FromBody] Models.Proxy.RequestData requestData)
-        {
-            if (ModelState.IsValid)
-            {
-                Models.Proxy.ResponseData responseData;
-                try
-                {
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = true,
-                        Message = "Success",
-                        MessageDetail = string.Format("Transacción exitosa para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return Ok(responseData);
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine(ex.Message);
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = false,
-                        Message = "failed",
-                        MessageDetail = string.Format("Error en la transacción para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return StatusCode(StatusCodes.Status500InternalServerError, responseData);
-                }
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-
-        [BasicAuthorize("edisongarcia.com")]
-        [HttpPost]
-        public async Task<IActionResult> CalcularInteres([FromBody] Models.Proxy.RequestData requestData)
-        {
-            if (ModelState.IsValid)
-            {
-                Models.Proxy.ResponseData responseData;
-                try
-                {
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = true,
-                        Message = "Success",
-                        MessageDetail = string.Format("Transacción exitosa para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return Ok(responseData);
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine(ex.Message);
-                    responseData = new Models.Proxy.ResponseData
-                    {
-                        Response = false,
-                        Message = "failed",
-                        MessageDetail = string.Format("Error en la transacción para el cliente {0}", requestData.IdentificacionCliente)
-                    };
-                    return StatusCode(StatusCodes.Status500InternalServerError, responseData);
-                }
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-
-
 
         private Models.Proxy.ResponseData GetResponse(bool response, string messageDetail, object data)
         {
             Models.Proxy.ResponseData responseData = new()
             {
-                Response = response,
                 Message = response ? "success" : "failed",
                 MessageDetail = messageDetail,
                 Data = data

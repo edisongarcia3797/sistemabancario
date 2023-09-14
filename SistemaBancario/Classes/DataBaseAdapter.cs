@@ -18,35 +18,36 @@ namespace Satrack.Integracion.SistemaBancario
 			this.logger = logger;
 		}
 
-		//public async Task<bool> InsertTransactionAsync(Models.Services.DataBase.ClienteProducto requestData)
-		//{
-		//	bool response = false;
-		//	try
-		//	{
-		//		SqlParameter traceId = new("@traceId", requestData.TraceId);
-		//		SqlParameter type = new("@type", "accumulation");
+		public async Task<bool> OpenProducts(Models.Services.DataBase.ClienteProducto requestData)
+		{
+			bool response = false;
+			try
+			{
+				SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
+				SqlParameter identificacionCliente = new("@identificacionCliente", requestData.IdentificacionCliente);
+                SqlParameter id_TipoProducto = new("@id_TipoProducto", requestData.IdTipoProducto);
+                SqlParameter saldo = new("@saldo", requestData.Saldo);
+                SqlParameter result = new()
+				{
+					ParameterName = "@result",
+					DbType = System.Data.DbType.Int32,
+					Direction = System.Data.ParameterDirection.Output
+				};
 
-		//		SqlParameter result = new()
-		//		{
-		//			ParameterName = "@result",
-		//			DbType = System.Data.DbType.Int32,
-		//			Direction = System.Data.ParameterDirection.Output
-		//		};
+				string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@saldo,@result OUTPUT";
+				await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, saldo, result);
+				if (int.Parse(result.Value.ToString()) > 0) response = true;
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "[SistemaBancario] Cannot update database message: {ex.Message}", ex.Message);
+				response = false;
+			}
 
-		//		string sqlString = "InsertClienteProducto @traceId,@type,@result OUTPUT";
-		//		await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, traceId, type,result);
-		//		if (int.Parse(result.Value.ToString()) > 0) response = true;
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		logger.LogError(ex, "[SistemaBancario] Cannot update database message: {ex.Message}", ex.Message);
-		//		response = false;
-		//	}
+			return response;
+		}
 
-		//	return response;
-		//}
-
-		public async Task<List<Models.Services.DataBase.ClienteProductos>> ConsultarProductos(Models.Services.DataBase.Parametros requestData)
+		public async Task<List<Models.Services.DataBase.ClienteProductos>> QueryProducts(Models.Services.DataBase.Parametros requestData)
 		{
 			List<Models.Services.DataBase.ClienteProductos> responseData = new();
 

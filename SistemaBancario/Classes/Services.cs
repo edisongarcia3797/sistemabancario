@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,7 +9,8 @@ namespace Satrack.Integracion.SistemaBancario
 {
     public interface IServiciosSistemaBancario
     {
-        Task<List<Models.Services.SistemaBancario.RespuestaClienteProductos>> ConsultarProductos(Models.Services.SistemaBancario.RequestData requestData);
+        Task<List<Models.Services.SistemaBancario.ResponseQueryProducts>> QueryProducts(Models.Services.SistemaBancario.RequestData requestData);
+        Task<bool> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts);
     }
 
     public class ServiciosSistemaBancario : IServiciosSistemaBancario
@@ -23,16 +26,16 @@ namespace Satrack.Integracion.SistemaBancario
             this.logger = logger;
         }
 
-        public async Task<List<Models.Services.SistemaBancario.RespuestaClienteProductos>> ConsultarProductos(Models.Services.SistemaBancario.RequestData requestData)
+        public async Task<List<Models.Services.SistemaBancario.ResponseQueryProducts>> QueryProducts(Models.Services.SistemaBancario.RequestData requestData)
         {
-            List<Models.Services.SistemaBancario.RespuestaClienteProductos> responseData = new();
+            List<Models.Services.SistemaBancario.ResponseQueryProducts> responseData = new();
 
             DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
-            var listaProductos = await dataBaseAdapter.ConsultarProductos(new Models.Services.DataBase.Parametros { IdentificacionCliente = (long)requestData.IdentificacionCliente });
+            var listaProductos = await dataBaseAdapter.QueryProducts(new Models.Services.DataBase.Parametros { IdentificacionCliente = requestData.IdentificacionCliente });
 
             foreach (var item in listaProductos)
             {
-                responseData.Add(new Models.Services.SistemaBancario.RespuestaClienteProductos
+                responseData.Add(new Models.Services.SistemaBancario.ResponseQueryProducts
                 {
                     NombreCliente = item.NombreCliente,
                     NumeroProducto = item.NumeroProducto,
@@ -41,6 +44,20 @@ namespace Satrack.Integracion.SistemaBancario
                 });
             }
             return responseData;
+        }
+
+        public async Task<bool> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts)
+        {
+            DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
+
+            Models.Services.DataBase.ClienteProducto clienteProducto = new()
+            {
+                IdentificacionCliente = requestOpenProducts.IdentificacionCliente,
+                NumeroProducto = requestOpenProducts.NumeroProducto,
+                IdTipoProducto = requestOpenProducts.TipoProducto,
+                Saldo = requestOpenProducts.Saldo,
+            };
+            return await dataBaseAdapter.OpenProducts(clienteProducto);
         }
     }
 }
