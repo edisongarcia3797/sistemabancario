@@ -1,12 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Satrack.Integracion.SistemaBancario
 {
     public interface IServiciosSistemaBancario
     {
-        Task<Models.Services.SistemaBancario.ResponseData> ConsultarProductos(Models.Services.SistemaBancario.RequestData requestData);
+        Task<List<Models.Services.SistemaBancario.RespuestaClienteProductos>> ConsultarProductos(Models.Services.SistemaBancario.RequestData requestData);
     }
 
     public class ServiciosSistemaBancario : IServiciosSistemaBancario
@@ -22,12 +26,24 @@ namespace Satrack.Integracion.SistemaBancario
             this.logger = logger;
         }
 
-        public async Task<Models.Services.SistemaBancario.ResponseData> ConsultarProductos(Models.Services.SistemaBancario.RequestData requestData)
+        public async Task<List<Models.Services.SistemaBancario.RespuestaClienteProductos>> ConsultarProductos(Models.Services.SistemaBancario.RequestData requestData)
         {
+            List<Models.Services.SistemaBancario.RespuestaClienteProductos> responseData = new();
+
             DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
-      
-            var result = await dataBaseAdapter.ConsultarProductos(new Models.Services.DataBase.Parametros { IdentificacionCliente = 15373797});
-            return new Models.Services.SistemaBancario.ResponseData();
+            var listaProductos = await dataBaseAdapter.ConsultarProductos(new Models.Services.DataBase.Parametros { IdentificacionCliente = (long)requestData.IdentificacionCliente });
+
+            foreach (var item in listaProductos)
+            {
+                responseData.Add(new Models.Services.SistemaBancario.RespuestaClienteProductos
+                {
+                    NombreCliente = item.NombreCliente,
+                    NumeroProducto = item.NumeroProducto,
+                    NombreProducto = item.NombreProducto,
+                    Saldo = item.Saldo,
+                });
+            }
+            return responseData;
         }
     }
 }

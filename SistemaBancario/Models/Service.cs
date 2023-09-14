@@ -8,16 +8,15 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
 {
     public class RequestData
     {
-        [JsonProperty("identificacionCliente")] public ulong? IdentificacionCliente { get; set; }
+        [JsonProperty("identificacionCliente")] public long? IdentificacionCliente { get; set; }
     }
 
-    public class ResponseData
+    public class RespuestaClienteProductos
     {
-        [JsonProperty("mainBalance", Order = 1, DefaultValueHandling = DefaultValueHandling.Ignore)] public ulong? MainBalance { get; set; }
-        [JsonProperty("approbationNumber", Order = 2, DefaultValueHandling = DefaultValueHandling.Ignore)] public string ApprobationNumber { get; set; }
-        [JsonProperty("errorCode", Order = 3, NullValueHandling = NullValueHandling.Ignore)] public string ErrorCode { get; set; }
-        [JsonProperty("errorMsg", Order = 4, NullValueHandling = NullValueHandling.Ignore)] public string ErrorMsg { get; set; }
-        [JsonProperty("traceId", Order = 5, NullValueHandling = NullValueHandling.Ignore)] public string TraceId { get; set; }
+        [JsonProperty("nombre", Order = 1)] public string NombreCliente { get; set; }
+        [JsonProperty("numeroProducto", Order = 2)] public long NumeroProducto { get; set; }
+        [JsonProperty("producto", Order = 3)] public string NombreProducto { get; set; }
+        [JsonProperty("saldo", Order = 3)] public double Saldo { get; set; }
     }
 }
 
@@ -30,9 +29,9 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
     }
 
     [Keyless]
-    public class ClienteProducto
+    public class ClienteProductos
     {
-        [Column("nombre", TypeName = "string")] public string NombreCliente { get; set; }
+        [Column("nombres", TypeName = "string")] public string NombreCliente { get; set; }
         [Column("numeroProducto", TypeName = "bigint")] public long NumeroProducto { get; set; }
         [Column("producto", TypeName = "string")] public string NombreProducto { get; set; }
         [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }

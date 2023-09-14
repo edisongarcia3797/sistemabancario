@@ -46,17 +46,16 @@ namespace Satrack.Integracion.SistemaBancario
 		//	return response;
 		//}
 
-		public async Task<List<Models.Services.DataBase.ClienteProducto>> ConsultarProductos(Models.Services.DataBase.Parametros requestData)
+		public async Task<List<Models.Services.DataBase.ClienteProductos>> ConsultarProductos(Models.Services.DataBase.Parametros requestData)
 		{
-			List<Models.Services.DataBase.ClienteProducto> responseData = new();
-			string TraceId = Guid.NewGuid().ToString();
+			List<Models.Services.DataBase.ClienteProductos> responseData = new();
 
 			try
 			{
 				SqlParameter type = new("@identificacionCliente", requestData.IdentificacionCliente);
 
 				string sqlString = "ConsultarProductos @identificacionCliente";
-				responseData = await sistemaBancarioContext.ClienteProducto.FromSqlRaw(sqlString, type).AsNoTracking().ToListAsync();
+				responseData = await sistemaBancarioContext.ClienteProductos.FromSqlRaw(sqlString, type).AsNoTracking().ToListAsync();
 			}
 			catch (Exception ex)
 			{
