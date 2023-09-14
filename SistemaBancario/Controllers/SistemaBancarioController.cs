@@ -95,10 +95,12 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                         Valor = requestData.Valor
                     };
 
-                    if (await this.serviciosSistemaBancario.Transaction(requestTransaction))
+                    var tuple = await this.serviciosSistemaBancario.Transaction(requestTransaction);
+
+                    if (tuple.response)
                         return Ok(GetResponse(true, string.Format("Transacción exitosa para el producto: {0}", requestData.NumeroProducto), null));
                     else
-                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error en la transacción para el producto: {0}", requestData.NumeroProducto), null));
+                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error en la transacción para el producto: {0}", requestData.NumeroProducto), tuple.message));
                 }
                 catch (Exception ex)
                 {

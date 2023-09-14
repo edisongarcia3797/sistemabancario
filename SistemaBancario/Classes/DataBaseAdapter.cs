@@ -65,9 +65,10 @@ namespace Satrack.Integracion.SistemaBancario
             return response;
         }
 
-        public async Task<bool> Transaction(Models.Services.DataBase.Transaccion requestData)
+        public async Task<(bool response, string message)> Transaction(Models.Services.DataBase.Transaccion requestData)
         {
             bool response = false;
+            string message = string.Empty;
             try
             {
                 SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
@@ -93,6 +94,7 @@ namespace Satrack.Integracion.SistemaBancario
                 string sqlString = "InsertTransaccion @numeroProducto,@fechaTrasaccion,@id_TipoMovimiento,@porcentajeInteres,@valor,@saldo,@result OUTPUT,@messageError OUTPUT";
                 await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, fechaTrasaccion, id_TipoMovimiento, porcentajeInteres, valor, saldo, result, messageError);
                 if (int.Parse(result.Value.ToString()) > 0) response = true;
+                message = messageError.Value.ToString();
             }
             catch (Exception ex)
             {
@@ -100,7 +102,7 @@ namespace Satrack.Integracion.SistemaBancario
                 response = false;
             }
 
-            return response;
+            return (response,message);
         }
     }
 }

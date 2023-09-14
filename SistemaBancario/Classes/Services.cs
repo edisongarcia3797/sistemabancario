@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Satrack.Integracion.SistemaBancario
     {
         Task<List<Models.Services.SistemaBancario.ResponseQueryProducts>> QueryProducts(Models.Services.SistemaBancario.RequestData requestData);
         Task<bool> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts);
-        Task<bool> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction);
+        Task<(bool response, string message)> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction);
     }
 
     public class ServiciosSistemaBancario : IServiciosSistemaBancario
@@ -60,7 +61,7 @@ namespace Satrack.Integracion.SistemaBancario
             return await dataBaseAdapter.OpenProducts(clienteProducto);
         }
 
-        public async Task<bool> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction)
+        public async Task<(bool response, string message)> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction)
         {
             DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
 
