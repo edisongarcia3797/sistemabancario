@@ -32,10 +32,10 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                 try
                 {
                     var productos = await this.serviciosSistemaBancario.QueryProducts(new Models.Services.SistemaBancario.RequestData { IdentificacionCliente = (long)requestData.IdentificacionCliente });
-                    
-                    if (productos.Any()) 
+
+                    if (productos.Any())
                         return Ok(GetResponse(true, string.Format("Transacción exitosa para el cliente: {0}", requestData.IdentificacionCliente), productos));
-                    else 
+                    else
                         return NotFound(GetResponse(false, string.Format("No hay resultado en la consulta de productos para el cliente: {0}", requestData.IdentificacionCliente), null));
                 }
                 catch (Exception ex)
@@ -63,8 +63,10 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                         Saldo = requestData.Saldo,
                     };
 
-                    await this.serviciosSistemaBancario.OpenProducts(requestOpenProduct);
-                    return Ok(GetResponse(true, string.Format("El producto se ha creado exitosamente para el cliente: {0}", requestData.IdentificacionCliente), null));
+                    if (await this.serviciosSistemaBancario.OpenProducts(requestOpenProduct))
+                        return Ok(GetResponse(true, string.Format("El producto se ha creado exitosamente para el cliente: {0}", requestData.IdentificacionCliente), null));
+                    else
+                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error al crear el producto para el cliente {0}", requestData.IdentificacionCliente), null));
                 }
                 catch (Exception ex)
                 {

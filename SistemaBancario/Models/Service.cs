@@ -38,7 +38,7 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
     [Keyless]
     public class ClienteProductos
     {
-        [Column("nombres", TypeName = "string")] public string NombreCliente { get; set; }
+        [Column("nombre", TypeName = "string")] public string NombreCliente { get; set; }
         [Column("numeroProducto", TypeName = "bigint")] public long NumeroProducto { get; set; }
         [Column("producto", TypeName = "string")] public string NombreProducto { get; set; }
         [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
