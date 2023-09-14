@@ -18,49 +18,49 @@ namespace Satrack.Integracion.SistemaBancario
 			this.logger = logger;
 		}
 
-		public async Task<bool> InsertTransactionAsync(Models.Services.DataBase.TransactionType requestData)
+		//public async Task<bool> InsertTransactionAsync(Models.Services.DataBase.ClienteProducto requestData)
+		//{
+		//	bool response = false;
+		//	try
+		//	{
+		//		SqlParameter traceId = new("@traceId", requestData.TraceId);
+		//		SqlParameter type = new("@type", "accumulation");
+
+		//		SqlParameter result = new()
+		//		{
+		//			ParameterName = "@result",
+		//			DbType = System.Data.DbType.Int32,
+		//			Direction = System.Data.ParameterDirection.Output
+		//		};
+
+		//		string sqlString = "InsertClienteProducto @traceId,@type,@result OUTPUT";
+		//		await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, traceId, type,result);
+		//		if (int.Parse(result.Value.ToString()) > 0) response = true;
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		logger.LogError(ex, "[SistemaBancario] Cannot update database message: {ex.Message}", ex.Message);
+		//		response = false;
+		//	}
+
+		//	return response;
+		//}
+
+		public async Task<List<Models.Services.DataBase.ClienteProducto>> ConsultarProductos(Models.Services.DataBase.Parametros requestData)
 		{
-			bool response = false;
-			try
-			{
-				SqlParameter traceId = new("@traceId", requestData.TraceId);
-				SqlParameter type = new("@type", "accumulation");
-
-				SqlParameter result = new()
-				{
-					ParameterName = "@result",
-					DbType = System.Data.DbType.Int32,
-					Direction = System.Data.ParameterDirection.Output
-				};
-
-				string sqlString = "InsertTransactions @traceId,@type,@service,@payLoad,@startDate,@endDate,@retryDate,@enableRetry,@retryNumber,@result OUTPUT";
-				await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, traceId, type,result);
-				if (int.Parse(result.Value.ToString()) > 0) response = true;
-			}
-			catch (Exception ex)
-			{
-				logger.LogError(ex, "[AccumDequeue] Cannot update database message: {ex.Message}", ex.Message);
-				response = false;
-			}
-
-			return response;
-		}
-
-		public async Task<List<Models.Services.DataBase.TransactionType>> GetTransactionsAsync(Models.Services.DataBase.TransactionType requestData)
-		{
-			List<Models.Services.DataBase.TransactionType> responseData = new();
+			List<Models.Services.DataBase.ClienteProducto> responseData = new();
 			string TraceId = Guid.NewGuid().ToString();
 
 			try
 			{
-				SqlParameter type = new("@type", "accumulation");
+				SqlParameter type = new("@identificacionCliente", requestData.IdentificacionCliente);
 
-				string sqlString = "GetTransactions @type,@service";
-				responseData = await sistemaBancarioContext.Transactions.FromSqlRaw(sqlString, type).AsNoTracking().ToListAsync();
+				string sqlString = "ConsultarProductos @identificacionCliente";
+				responseData = await sistemaBancarioContext.ClienteProducto.FromSqlRaw(sqlString, type).AsNoTracking().ToListAsync();
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex, "[AccumDequeue] Cannot query database, message: {ex.Message}", ex.Message);
+				logger.LogError(ex, "[SistemaBancario] Cannot query database, message: {ex.Message}", ex.Message);
 			}
 			return responseData;
 		}

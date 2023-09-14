@@ -29,26 +29,32 @@ namespace Satrack.Integracion.SistemaBancario
 						.SetBasePath(env.ContentRootPath)
 						.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 						.AddEnvironmentVariables();
-			Configuration = builder.Build();
-		}
+
+            Configuration = builder.Build();
+        }
 
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.Configure<ProxySettings>(Configuration.GetSection("ProxySettings"));
-
+            services.Configure<ServiceSettings>(Configuration.GetSection("ServiceSettings"));
+            
             string sqlServerConn = Configuration["DataBaseSettings:SqlServer"];
             services.AddDbContext<SistemaBancarioContext>(options => options.UseSqlServer(sqlServerConn));
 
+            IServiceSettings serviceSettings = new ServiceSettings();
+            Configuration.Bind("ServiceSettings", serviceSettings);
+            services.AddSingleton(serviceSettings);
+
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 			services.AddOptions();
-		}
+        }
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 			app.UseRouting();
 			app.UseAuthorization();
-
+				
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapGet("/version", async context =>
