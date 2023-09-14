@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Satrack.Integracion.SistemaBancario.Models.Proxy
@@ -16,10 +16,17 @@ namespace Satrack.Integracion.SistemaBancario.Models.Proxy
         [JsonProperty("saldo", Order = 4)] public double Saldo { get; set; }
     }
 
+    public class RequestTransaction 
+    {
+        [Required][JsonProperty("numeroProducto", Order = 1)] public long? NumeroProducto { get; set; }
+        [Required][JsonProperty("tipoMovimiento", Order = 2)][Range(1, 3, ErrorMessage = "Ingreso solo los tipos de movimientos permitidos: 1 = Depósito, 2 = Retiro o 3 = Cancelación")] public int? TipoMovimiento { get; set; }
+        [Required][JsonProperty("valor", Order = 3)] public double Valor { get; set; }
+    }
+
     public class ResponseData
     {
-        [JsonProperty("message", Order = 2)] public string Message { get; set; }
-        [JsonProperty("messageDetail", Order = 3)] public string MessageDetail { get; set; }
-        [JsonProperty("data", Order = 4, NullValueHandling = NullValueHandling.Ignore)] public object Data { get; set; }
+        [JsonProperty("message", Order = 1)] public string Message { get; set; }
+        [JsonProperty("messageDetail", Order = 2)] public string MessageDetail { get; set; }
+        [JsonProperty("data", Order = 3, NullValueHandling = NullValueHandling.Ignore)] public object Data { get; set; }
     }
 }

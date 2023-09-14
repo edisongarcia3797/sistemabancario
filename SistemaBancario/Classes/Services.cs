@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ namespace Satrack.Integracion.SistemaBancario
     {
         Task<List<Models.Services.SistemaBancario.ResponseQueryProducts>> QueryProducts(Models.Services.SistemaBancario.RequestData requestData);
         Task<bool> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts);
+        Task<bool> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction);
     }
 
     public class ServiciosSistemaBancario : IServiciosSistemaBancario
@@ -58,6 +58,22 @@ namespace Satrack.Integracion.SistemaBancario
                 Saldo = requestOpenProducts.Saldo,
             };
             return await dataBaseAdapter.OpenProducts(clienteProducto);
+        }
+
+        public async Task<bool> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction)
+        {
+            DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
+
+            Models.Services.DataBase.Transaccion transaccion = new()
+            {
+                NumeroProducto = requestTransaction.NumeroProducto,
+                FechaTrasaccion = DateTime.Now,
+                IdTipoMovimiento = requestTransaction.TipoMovimiento,
+                PorcentajeInteres = 0,
+                Saldo = 0,
+                Valor = requestTransaction.Valor,
+            };
+            return await dataBaseAdapter.Transaction(transaccion);
         }
     }
 }

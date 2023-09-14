@@ -80,6 +80,38 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
             }
         }
 
+        [BasicAuthorize("edisongarcia.com")]
+        [HttpPost]
+        public async Task<IActionResult> Transaction([FromBody] Models.Proxy.RequestTransaction requestData)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Models.Services.SistemaBancario.RequestTransaction requestTransaction = new()
+                    {
+                        NumeroProducto = (long)requestData.NumeroProducto,
+                        TipoMovimiento = (int)requestData.TipoMovimiento,
+                        Valor = requestData.Valor
+                    };
+
+                    if (await this.serviciosSistemaBancario.Transaction(requestTransaction))
+                        return Ok(GetResponse(true, string.Format("Transacción exitosa para el producto: {0}", requestData.NumeroProducto), null));
+                    else
+                        return StatusCode(StatusCodes.Status400BadRequest, GetResponse(false, string.Format("Error en la transacción para el producto: {0}", requestData.NumeroProducto), null));
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("[SistemaBancario] {ex.Message}", ex.Message);
+                    return StatusCode(StatusCodes.Status500InternalServerError, GetResponse(false, string.Format("Error en la transacción para el producto: {0}", requestData.NumeroProducto), null));
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
         private Models.Proxy.ResponseData GetResponse(bool response, string messageDetail, object data)
         {
             Models.Proxy.ResponseData responseData = new()

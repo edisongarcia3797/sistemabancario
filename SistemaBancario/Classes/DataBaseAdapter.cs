@@ -18,35 +18,6 @@ namespace Satrack.Integracion.SistemaBancario
 			this.logger = logger;
 		}
 
-		public async Task<bool> OpenProducts(Models.Services.DataBase.ClienteProducto requestData)
-		{
-			bool response = false;
-			try
-			{
-				SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
-				SqlParameter identificacionCliente = new("@identificacionCliente", requestData.IdentificacionCliente);
-                SqlParameter id_TipoProducto = new("@id_TipoProducto", requestData.IdTipoProducto);
-                SqlParameter saldo = new("@saldo", requestData.Saldo);
-                SqlParameter result = new()
-				{
-					ParameterName = "@result",
-					DbType = System.Data.DbType.Int32,
-					Direction = System.Data.ParameterDirection.Output
-				};
-
-				string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@saldo,@result OUTPUT";
-				await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, saldo, result);
-				if (int.Parse(result.Value.ToString()) > 0) response = true;
-			}
-			catch (Exception ex)
-			{
-				logger.LogError(ex, "[SistemaBancario] Cannot update database message: {ex.Message}", ex.Message);
-				response = false;
-			}
-
-			return response;
-		}
-
 		public async Task<List<Models.Services.DataBase.ClienteProductos>> QueryProducts(Models.Services.DataBase.Parametros requestData)
 		{
 			List<Models.Services.DataBase.ClienteProductos> responseData = new();
@@ -64,5 +35,65 @@ namespace Satrack.Integracion.SistemaBancario
 			}
 			return responseData;
 		}
-	}
+
+        public async Task<bool> OpenProducts(Models.Services.DataBase.ClienteProducto requestData)
+        {
+            bool response = false;
+            try
+            {
+                SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
+                SqlParameter identificacionCliente = new("@identificacionCliente", requestData.IdentificacionCliente);
+                SqlParameter id_TipoProducto = new("@id_TipoProducto", requestData.IdTipoProducto);
+                SqlParameter saldo = new("@saldo", requestData.Saldo);
+                SqlParameter result = new()
+                {
+                    ParameterName = "@result",
+                    DbType = System.Data.DbType.Int32,
+                    Direction = System.Data.ParameterDirection.Output
+                };
+
+                string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@saldo,@result OUTPUT";
+                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, saldo, result);
+                if (int.Parse(result.Value.ToString()) > 0) response = true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[SistemaBancario] Cannot update database message: {ex.Message}", ex.Message);
+                response = false;
+            }
+
+            return response;
+        }
+
+        public async Task<bool> Transaction(Models.Services.DataBase.Transaccion requestData)
+        {
+            bool response = false;
+            try
+            {
+                SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
+                SqlParameter fechaTrasaccion = new("@fechaTrasaccion", requestData.FechaTrasaccion);
+                SqlParameter id_TipoMovimiento = new("@id_TipoMovimiento", requestData.IdTipoMovimiento);
+                SqlParameter porcentajeInteres = new("@porcentajeInteres", requestData.PorcentajeInteres);
+                SqlParameter valor = new("@valor", requestData.Valor);
+                SqlParameter saldo = new("@saldo", requestData.Saldo);
+                SqlParameter result = new()
+                {
+                    ParameterName = "@result",
+                    DbType = System.Data.DbType.Int32,
+                    Direction = System.Data.ParameterDirection.Output
+                };
+
+                string sqlString = "InsertTransaccion @numeroProducto,@fechaTrasaccion,@id_TipoMovimiento,@porcentajeInteres,@valor,@saldo,@result OUTPUT";
+                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, fechaTrasaccion, id_TipoMovimiento, porcentajeInteres, valor, saldo, result);
+                if (int.Parse(result.Value.ToString()) > 0) response = true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[SistemaBancario] Cannot update database message: {ex.Message}", ex.Message);
+                response = false;
+            }
+
+            return response;
+        }
+    }
 }
