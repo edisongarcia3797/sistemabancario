@@ -96,6 +96,53 @@
 			"response": []
 		},
 		{
+			"name": "AverageInterest",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "edisongarcia3797",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "/*******Clientes\r\n\r\nidentificacionCliente\tnombre\tid_TipoCliente\r\n15373797\tEdison García\t1\r\n85452157\tVioleta Parra\t1\r\n14587245\tFacundo Cabral\t2\r\n78454785\tSilvio Rodriguez\t1\r\n96584575\tMercedes Sosa\t1\r\n95442127\tPablo Milanés\t2\r\n95211211\tVictor Jara\t2\r\n\r\n*/\r\n{\r\n    \"numeroProducto\": 1111111, //Ejecutar QueryProducts para conocer los números de productos existentes,\r\n    \"fechaInicial\": \"2023-06-10T00:46:30\",\r\n    \"fechaFinal\": \"2023-06-10T00:46:30\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/SistemaBancario/AverageInterest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"SistemaBancario",
+						"AverageInterest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "QueryProducts",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
