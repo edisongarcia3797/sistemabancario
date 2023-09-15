@@ -56,3 +56,20 @@ Consideraciones. Es un proyecto net7.0 desarrollado en Visual Studio 2022 con la
 
 
 Una vez haya ejecutado el proyecto, ya el sistema está preparado para ejecutar cada una de las operaciones.
+
+Respecto al alcance funcional de la prueba, hay requerimiento que especifica la necesidad de que el cliente reciba un interés mensual sobre el saldo según el tipo de producto.
+Para dar alcance a esta solicitud, solo alcancé a implementar el coco de la clase GenerateInterest.cs.
+
+La clase GenerateInterest.cs, tiene como propósito ejecutar un proceso en segundo plano sobre el servicio, para poder entregar el interés al cliente para las transacciones de con tipo de movimiento "Abono interés".
+
+El mecanismo de persistencia lo implementé con un OutputCache sobre el endpoint QueryProducts. En la clase Startup.cs, se establece la política de duración y borrado del caché.
+La estructura del proyecto está oriendaba bajo el modelo MVC, teniendo en cuenta que quise dejar el poyecto con pocos artefactos, adicionando los artefactos estrictamente necesario (Es una estructura minimalista).
+Adicionalmente pensé en implementar la lógia de las operaciones en la base de datos, para asignar a la API solo la responsabilidad de ser transportador de datos y exponer las operaciones bancarias.
+
+Cualquier observación, duda o inquietud con la ejecuión me pueden llamar al celular: 3105486101
+
+
+
+
+
+
