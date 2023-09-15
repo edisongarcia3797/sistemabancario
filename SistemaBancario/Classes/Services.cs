@@ -32,7 +32,7 @@ namespace Satrack.Integracion.SistemaBancario
             List<Models.Services.SistemaBancario.ResponseQueryProducts> responseData = new();
 
             DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
-            var listaProductos = await dataBaseAdapter.QueryProducts(new Models.Services.DataBase.Parametros { IdentificacionCliente = requestData.IdentificacionCliente });
+            var listaProductos = await dataBaseAdapter.QueryProducts(new Models.Services.DataBase.Parametros { IdentificacionCliente = (long)requestData.IdentificacionCliente });
 
             foreach (var item in listaProductos)
             {
@@ -43,6 +43,7 @@ namespace Satrack.Integracion.SistemaBancario
                     NumeroProducto = item.NumeroProducto,
                     NombreProducto = item.NombreProducto,
                     Saldo = item.Saldo,
+                    IdentificacionCliente = null
                 });
             }
             return responseData;
@@ -54,7 +55,7 @@ namespace Satrack.Integracion.SistemaBancario
 
             Models.Services.DataBase.ClienteProducto clienteProducto = new()
             {
-                IdentificacionCliente = requestOpenProducts.IdentificacionCliente,
+                IdentificacionCliente = (long)requestOpenProducts.IdentificacionCliente,
                 NumeroProducto = requestOpenProducts.NumeroProducto,
                 IdTipoProducto = requestOpenProducts.TipoProducto,
                 Saldo = requestOpenProducts.Saldo,

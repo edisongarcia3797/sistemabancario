@@ -29,7 +29,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "/********* tipoProducto\r\n\r\nid_TipoProducto\tproducto\r\n1\tCuenta de ahorros\r\n2\tCuenta corriente\r\n3\tCDT\r\n\r\n*/\r\n{\r\n    \"identificacionCliente\":15373797,\r\n    \"numeroProducto\": 2121221,\r\n    \"tipoProducto\": 3,\r\n    \"saldo\": 4523\r\n}",
+					"raw": "/********* tipoProducto\r\n\r\nid_TipoProducto\tproducto\r\n1\tCuenta de ahorros\r\n2\tCuenta corriente\r\n3\tCDT\r\n\r\n*/\r\n{\r\n    \"identificacionCliente\":15373797,\r\n    \"numeroProducto\": 112233, //Ejecutar QueryProducts para conocer los números de productos existentes\r\n    \"tipoProducto\": 1, // 1= Ahorros,2 = Corriente o 3 = CDT\r\n    \"saldo\": 4523\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -73,7 +73,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "/********** tipoMovimiento\r\n\r\nid_TipoMovimiento\tMovimiento\r\n1\tDepósito\r\n2\tRetiro\r\n3\tCancelación\r\n4\tAbono interés\r\n\r\n*/\r\n{\r\n    \"numeroProducto\": 2121221,\r\n    \"tipoMovimiento\": 1,\r\n    \"valor\": 12121\r\n}",
+					"raw": "/********** tipoMovimiento\r\n\r\nid_TipoMovimiento\tMovimiento\r\n1\tDepósito\r\n2\tRetiro\r\n3\tCancelación\r\n4\tAbono interés\r\n\r\n*/\r\n{\r\n    \"numeroProducto\": 11, //Ejecutar QueryProducts para conocer los números de productos existentes\r\n    \"tipoMovimiento\": 1, //1 = Depósito, 2 = Retiro o 3 = Cancelación\r\n    \"valor\": 12121\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

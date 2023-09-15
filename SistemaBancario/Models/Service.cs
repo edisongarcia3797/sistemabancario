@@ -8,7 +8,7 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
 {
     public class RequestData
     {
-        [JsonProperty("identificacionCliente")] public long IdentificacionCliente { get; set; }
+        [JsonProperty("identificacionCliente", NullValueHandling = NullValueHandling.Ignore)] public long? IdentificacionCliente { get; set; }
         [JsonProperty("numeroProducto")] public long NumeroProducto { get; set; }
         [JsonProperty("saldo")] public double Saldo { get; set; }
     }
