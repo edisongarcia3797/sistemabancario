@@ -59,8 +59,7 @@ namespace Satrack.Integracion.SistemaBancario
                 IdentificacionCliente = (long)requestOpenProducts.IdentificacionCliente,
                 NumeroProducto = requestOpenProducts.NumeroProducto,
                 IdTipoProducto = requestOpenProducts.TipoProducto,
-                PorcentajeInteres = requestOpenProducts.TipoProducto.Equals(1) ? this.serviceSettings.Interes.porcentajeAhorro
-                : requestOpenProducts.TipoProducto.Equals(3) ? this.serviceSettings.Interes.porcentajeCDT : 0,
+                PorcentajeInteres = requestOpenProducts.TipoProducto.Equals(1) ? this.serviceSettings.Interes.porcentajeAhorro : requestOpenProducts.TipoProducto.Equals(3) ? this.serviceSettings.Interes.porcentajeCDT : 0,
                 Saldo = requestOpenProducts.Saldo,
             };
             return await dataBaseAdapter.OpenProducts(clienteProducto);
