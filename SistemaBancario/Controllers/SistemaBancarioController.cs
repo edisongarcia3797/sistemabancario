@@ -125,6 +125,37 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
             }
         }
 
+        [BasicAuthorize("edisongarcia.com")]
+        [HttpGet]
+        public async Task<IActionResult> AverageInterest([FromBody] Models.Proxy.RequestAverageInterest requestData)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Models.Services.SistemaBancario.RequestAverageInterest requestAverageInterest = new()
+                    {
+                        NumeroProducto = (long)requestData.NumeroProducto,
+                        fechaInicial = (DateTime)requestData.fechaInicial,
+                        fechaFinal = (DateTime)requestData.fechaFinal
+                    };
+
+                    var productos = await this.serviciosSistemaBancario.AverageInterest(requestAverageInterest);
+
+                    if (productos.Promedio > 0)
+                        return Ok(GetResponse(true, string.Format("Transacción exitosa para el producto: {0}", requestData.NumeroProducto), productos));
+                    else
+                        return NotFound(GetResponse(false, string.Format("No hay resultado en la consulta de promedio de intereses para el producto: {0}", requestData.NumeroProducto), null));
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("[SistemaBancario] {ex.Message}", ex.Message);
+                    return StatusCode(StatusCodes.Status500InternalServerError, GetResponse(false, string.Format("Error en la transacción para el producto {0}", requestData.NumeroProducto), null));
+                }
+            }
+            else return BadRequest(ModelState);
+        }
+
         private Models.Proxy.ResponseData GetResponse(bool response, string messageDetail, object data)
         {
             Models.Proxy.ResponseData responseData = new()

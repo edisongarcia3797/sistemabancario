@@ -9,6 +9,7 @@ namespace Satrack.Integracion.SistemaBancario
 		public SistemaBancarioContext(string connectionString) { this.ConnectionString = connectionString; }
 		public SistemaBancarioContext(DbContextOptions<SistemaBancarioContext> options) : base(options) { }
         public virtual DbSet<Models.Services.DataBase.ClienteProductos> ClienteProductos { get; set; }
+        public virtual DbSet<Models.Services.DataBase.AverageInterest> AverageInterest { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			if (!optionsBuilder.IsConfigured)

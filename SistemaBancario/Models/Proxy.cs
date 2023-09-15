@@ -29,4 +29,11 @@ namespace Satrack.Integracion.SistemaBancario.Models.Proxy
         [JsonProperty("messageDetail", Order = 2)] public string MessageDetail { get; set; }
         [JsonProperty("data", Order = 3, NullValueHandling = NullValueHandling.Ignore)] public object Data { get; set; }
     }
+
+    public class RequestAverageInterest
+    {
+        [Required][JsonProperty("numeroProducto", Order = 1)] public long? NumeroProducto { get; set; }
+        [Required][JsonProperty("fechaInicial", Order = 2)] public DateTime? fechaInicial { get; set; }
+        [Required][JsonProperty("fechaFinal", Order = 3)] public DateTime? fechaFinal { get; set; }
+    }
 }

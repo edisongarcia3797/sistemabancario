@@ -19,7 +19,6 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
         [JsonProperty("tipoCliente")] public string TipoCliente { get; set; }
         [JsonProperty("producto")] public string NombreProducto { get; set; }
         [JsonProperty("porcentajeInteres")] public double PorcentajeInteres { get; set; }
-        
     }
 
     public class RequestOpenProduct : RequestData
@@ -30,6 +29,16 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
     {
         [JsonProperty("tipoMovimiento")] public int TipoMovimiento { get; set; }
         [JsonProperty("valor")] public double Valor { get; set; }
+    }
+    public class RequestAverageInterest : RequestData
+    {
+        [JsonProperty("fechaInicial")] public DateTime fechaInicial { get; set; }
+        [JsonProperty("fechaFinal")] public DateTime fechaFinal { get; set; }
+    }
+
+    public class ResponseAverageInterest
+    {
+        [JsonProperty("promedio")] public double Promedio { get; set; }
     }
 }
 
@@ -44,6 +53,12 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
         [Column("producto", TypeName = "string")] public string NombreProducto { get; set; }
         [Column("porcentajeInteres", TypeName = "numeric")] public double PorcentajeInteres { get; set; }
         [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
+    }
+
+    [Keyless]
+    public class AverageInterest
+    {
+        [Column("promedio", TypeName = "numeric")] public double Promedio { get; set; }
     }
 
     public class ClienteProducto

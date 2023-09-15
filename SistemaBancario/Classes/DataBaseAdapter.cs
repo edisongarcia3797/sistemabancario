@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Satrack.Integracion.SistemaBancario
@@ -24,10 +25,10 @@ namespace Satrack.Integracion.SistemaBancario
 
 			try
 			{
-				SqlParameter type = new("@identificacionCliente", identificacionCliente);
+				SqlParameter identificacion = new("@identificacionCliente", identificacionCliente);
 
 				string sqlString = "ConsultarProductos @identificacionCliente";
-				responseData = await sistemaBancarioContext.ClienteProductos.FromSqlRaw(sqlString, type).AsNoTracking().ToListAsync();
+				responseData = await sistemaBancarioContext.ClienteProductos.FromSqlRaw(sqlString, identificacion).AsNoTracking().ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -112,6 +113,27 @@ namespace Satrack.Integracion.SistemaBancario
             }
 
             return (response,message);
+        }
+
+        public async Task<Models.Services.DataBase.AverageInterest> AverageInterest(Models.Services.SistemaBancario.RequestAverageInterest requestAverageInterest)
+        {
+            Models.Services.DataBase.AverageInterest responseData = new();
+
+            try
+            {
+                SqlParameter numeroProducto = new("@numeroProducto", requestAverageInterest.NumeroProducto);
+                SqlParameter fechaInicial = new("@fechaInicial", requestAverageInterest.fechaInicial);
+                SqlParameter fechaFinal = new("@fechaFinal", requestAverageInterest.fechaFinal);
+
+                string sqlString = "CalcularPromedioInteres @numeroProducto,@fechaInicial,@fechaFinal";
+                var result = await sistemaBancarioContext.AverageInterest.FromSqlRaw(sqlString, numeroProducto, fechaInicial, fechaFinal).AsNoTracking().ToListAsync();
+                responseData = result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[SistemaBancario] Cannot query database, message: {ex.Message}", ex.Message);
+            }
+            return responseData;
         }
     }
 }

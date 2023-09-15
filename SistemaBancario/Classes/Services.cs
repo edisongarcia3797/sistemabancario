@@ -12,6 +12,7 @@ namespace Satrack.Integracion.SistemaBancario
         Task<List<Models.Services.SistemaBancario.ResponseQueryProducts>> QueryProducts(Models.Services.SistemaBancario.RequestData requestData);
         Task<(bool response, string message)> OpenProducts(Models.Services.SistemaBancario.RequestOpenProduct requestOpenProducts);
         Task<(bool response, string message)> Transaction(Models.Services.SistemaBancario.RequestTransaction requestTransaction);
+        Task<Models.Services.SistemaBancario.ResponseAverageInterest> AverageInterest(Models.Services.SistemaBancario.RequestAverageInterest requestAverageInterest);
     }
 
     public class ServiciosSistemaBancario : IServiciosSistemaBancario
@@ -78,6 +79,17 @@ namespace Satrack.Integracion.SistemaBancario
                 Valor = requestTransaction.Valor,
             };
             return await dataBaseAdapter.Transaction(transaccion);
+        }
+
+        public async Task<Models.Services.SistemaBancario.ResponseAverageInterest> AverageInterest(Models.Services.SistemaBancario.RequestAverageInterest requestAverageInterest)
+        {
+            Models.Services.SistemaBancario.ResponseAverageInterest responseData = new();
+
+            DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
+            var promedio = await dataBaseAdapter.AverageInterest(requestAverageInterest);
+            responseData.Promedio = promedio.Promedio;
+
+            return responseData;
         }
     }
 }
