@@ -1,4 +1,4 @@
-# Instructivo de ejecuión Sistema Bancario #
+# Instructivo de ejecución Sistema Bancario #
 
 ## SistemaBancario ##
 
@@ -9,20 +9,35 @@
 
 #### Tabla de contenido
 
-- [Descripción de la necesidad](#descripción-de-la-necesidad)
-- [Consumo de Métodos](#consumo-de-métodos)
+- [Crear base de datos](#crear-base-de-datos)
+- [Ejecutar script](#ejecutar-script)
+- [Importar postman](#importar-postman)
+- [Ejecutar proyecto](#ejecutar-proyecto)
 
 
-#### Descripción de la necesidad
+SistemaBancario.postman_collection.json
 
-Esta integración cumple con el requerimiento de exponer en un servicio la acumulación de Puntos Colombia..
+#### Crear base de datos
 
-| **Nombre de la interfaz:** | **ConsultaCliente**                            |
-| -------------------------- | ------------------------------------------------------------ |
-| **Qué**                    | Se requiere obtener y enviar los datos de acumulación.|
-| **Porqué**                 | Se requiere enviar dichos datos para la acumulación a Puntos Colombia y/o Clifre.|
-| **Para que**               | Para proporcionar los datos de acumulacióna una cola de RabbitMQ.|
+1. Crear la base de datos con nombre SISTEMABANCARIO en una instancia local de SQL Express
 
-#### Consumo de métodos
-- Mensaje de solicitud del servicio
+![Crear](crearbasedatos.png)
+
+#### Ejecutar script
+
+1. Ejecutar script con nombre ScriptCreateDataBase.sql ubicado en el directorio que describe la imagen.
+
+![Crear](EjecutarScript.png)
  
+ #### Importar postman
+
+1. Importar la colección de postman con nombre SistemaBancario.postman_collection.json ubicado en el directorio que describe la imagen.
+
+![Crear](ImportarColeccionPostman.png)
+
+ #### Ejecutar proyecto
+
+1. Abrir y ejecutar el proyecto SistemaBancario.sln ubicado en el directorio que describe la imagen.
+
+![Crear](EjecutarProyecto.png)
+
