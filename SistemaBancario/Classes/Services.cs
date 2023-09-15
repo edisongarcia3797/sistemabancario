@@ -42,6 +42,7 @@ namespace Satrack.Integracion.SistemaBancario
                     TipoCliente = item.TipoCliente,
                     NumeroProducto = item.NumeroProducto,
                     NombreProducto = item.NombreProducto,
+                    PorcentajeInteres = item.PorcentajeInteres,
                     Saldo = item.Saldo,
                     IdentificacionCliente = null
                 });
@@ -58,6 +59,8 @@ namespace Satrack.Integracion.SistemaBancario
                 IdentificacionCliente = (long)requestOpenProducts.IdentificacionCliente,
                 NumeroProducto = requestOpenProducts.NumeroProducto,
                 IdTipoProducto = requestOpenProducts.TipoProducto,
+                PorcentajeInteres = requestOpenProducts.TipoProducto.Equals(1) ? this.serviceSettings.Interes.porcentajeAhorro
+                : requestOpenProducts.TipoProducto.Equals(3) ? this.serviceSettings.Interes.porcentajeCDT : 0,
                 Saldo = requestOpenProducts.Saldo,
             };
             return await dataBaseAdapter.OpenProducts(clienteProducto);
@@ -73,7 +76,6 @@ namespace Satrack.Integracion.SistemaBancario
                 FechaTrasaccion = DateTime.Now,
                 IdTipoMovimiento = requestTransaction.TipoMovimiento,
                 PorcentajeInteres = 0,
-                Saldo = 0,
                 Valor = requestTransaction.Valor,
             };
             return await dataBaseAdapter.Transaction(transaccion);

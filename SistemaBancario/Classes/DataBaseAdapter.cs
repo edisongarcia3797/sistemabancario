@@ -45,6 +45,7 @@ namespace Satrack.Integracion.SistemaBancario
                 SqlParameter numeroProducto = new("@numeroProducto", requestData.NumeroProducto);
                 SqlParameter identificacionCliente = new("@identificacionCliente", requestData.IdentificacionCliente);
                 SqlParameter id_TipoProducto = new("@id_TipoProducto", requestData.IdTipoProducto);
+                SqlParameter porcentajeInteres = new("@porcentajeInteres", requestData.PorcentajeInteres);
                 SqlParameter saldo = new("@saldo", requestData.Saldo);
                 SqlParameter result = new()
                 {
@@ -60,8 +61,8 @@ namespace Satrack.Integracion.SistemaBancario
                     Size = 2000
                 };
 
-                string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@saldo,@result OUTPUT,@messageError OUTPUT";
-                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, saldo, result, messageError);
+                string sqlString = "InsertClienteProducto @numeroProducto,@identificacionCliente,@id_TipoProducto,@porcentajeInteres,@saldo,@result OUTPUT,@messageError OUTPUT";
+                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, identificacionCliente, id_TipoProducto, porcentajeInteres, saldo, result, messageError);
                 if (int.Parse(result.Value.ToString()) > 0) response = true;
                 message = messageError.Value.ToString();
             }
@@ -85,7 +86,6 @@ namespace Satrack.Integracion.SistemaBancario
                 SqlParameter id_TipoMovimiento = new("@id_TipoMovimiento", requestData.IdTipoMovimiento);
                 SqlParameter porcentajeInteres = new("@porcentajeInteres", requestData.PorcentajeInteres);
                 SqlParameter valor = new("@valor", requestData.Valor);
-                SqlParameter saldo = new("@saldo", requestData.Saldo);
                 SqlParameter result = new()
                 {
                     ParameterName = "@result",
@@ -100,8 +100,8 @@ namespace Satrack.Integracion.SistemaBancario
                     Size = 2000
                 };
 
-                string sqlString = "InsertTransaccion @numeroProducto,@fechaTrasaccion,@id_TipoMovimiento,@porcentajeInteres,@valor,@saldo,@result OUTPUT,@messageError OUTPUT";
-                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, fechaTrasaccion, id_TipoMovimiento, porcentajeInteres, valor, saldo, result, messageError);
+                string sqlString = "InsertTransaccion @numeroProducto,@fechaTrasaccion,@id_TipoMovimiento,@porcentajeInteres,@valor,@result OUTPUT,@messageError OUTPUT";
+                await sistemaBancarioContext.Database.ExecuteSqlRawAsync(sqlString, numeroProducto, fechaTrasaccion, id_TipoMovimiento, porcentajeInteres, valor, result, messageError);
                 if (int.Parse(result.Value.ToString()) > 0) response = true;
                 message = messageError.Value.ToString();
             }

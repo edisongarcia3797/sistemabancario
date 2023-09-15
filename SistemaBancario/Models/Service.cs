@@ -18,6 +18,8 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
         [JsonProperty("nombre")] public string NombreCliente { get; set; }
         [JsonProperty("tipoCliente")] public string TipoCliente { get; set; }
         [JsonProperty("producto")] public string NombreProducto { get; set; }
+        [JsonProperty("porcentajeInteres")] public double PorcentajeInteres { get; set; }
+        
     }
 
     public class RequestOpenProduct : RequestData
@@ -46,6 +48,7 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
         [Column("tipoCliente", TypeName = "string")] public string TipoCliente { get; set; }
         [Column("numeroProducto", TypeName = "bigint")] public long NumeroProducto { get; set; }
         [Column("producto", TypeName = "string")] public string NombreProducto { get; set; }
+        [Column("porcentajeInteres", TypeName = "numeric")] public double PorcentajeInteres { get; set; }
         [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
     }
 
@@ -55,6 +58,7 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
         [Column("numeroProducto", TypeName = "bigint")] public long NumeroProducto { get; set; }
         [Column("identificacionCliente", TypeName = "bigint")] public long IdentificacionCliente { get; set; }
         [Column("id_TipoProducto", TypeName = "int")] public int IdTipoProducto { get; set; }
+        [Column("porcentajeInteres", TypeName = "numeric")] public double PorcentajeInteres { get; set; }
         [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
     }
 
@@ -66,6 +70,5 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
         [Column("id_TipoMovimiento", TypeName = "int")] public int IdTipoMovimiento { get; set; }
         [Column("porcentajeInteres", TypeName = "numeric")] public double PorcentajeInteres { get; set; }
         [Column("valor", TypeName = "numeric")] public double Valor { get; set; }
-        [Column("saldo", TypeName = "numeric")] public double Saldo { get; set; }
     }
 }
