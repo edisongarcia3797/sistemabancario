@@ -36,12 +36,6 @@ namespace Satrack.Integracion.SistemaBancario.Models.Services.SistemaBancario
 namespace Satrack.Integracion.SistemaBancario.Models.Services.DataBase
 {
     [Keyless]
-    public class Parametros
-    {
-        [Column("identificacionCliente", TypeName = "bigint")] public long IdentificacionCliente { get; set; }
-    }
-
-    [Keyless]
     public class ClienteProductos
     {
         [Column("nombre", TypeName = "string")] public string NombreCliente { get; set; }

@@ -32,7 +32,7 @@ namespace Satrack.Integracion.SistemaBancario
             List<Models.Services.SistemaBancario.ResponseQueryProducts> responseData = new();
 
             DataBaseAdapter dataBaseAdapter = new(new SistemaBancarioContext(dbContextOptions), logger);
-            var listaProductos = await dataBaseAdapter.QueryProducts(new Models.Services.DataBase.Parametros { IdentificacionCliente = (long)requestData.IdentificacionCliente });
+            var listaProductos = await dataBaseAdapter.QueryProducts((long)requestData.IdentificacionCliente);
 
             foreach (var item in listaProductos)
             {

@@ -33,7 +33,12 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
             {
                 try
                 {
-                    var productos = await this.serviciosSistemaBancario.QueryProducts(new Models.Services.SistemaBancario.RequestData { IdentificacionCliente = (long)requestData.IdentificacionCliente });
+                    Models.Services.SistemaBancario.RequestData requestService = new()
+                    {
+                        IdentificacionCliente = requestData.IdentificacionCliente
+                    };
+
+                    var productos = await this.serviciosSistemaBancario.QueryProducts(requestService);
 
                     if (productos.Any())
                         return Ok(GetResponse(true, string.Format("Transacción exitosa para el cliente: {0}", requestData.IdentificacionCliente), productos));
@@ -59,7 +64,7 @@ namespace Satrack.Integracion.SistemaBancario.Controllers
                 {
                     Models.Services.SistemaBancario.RequestOpenProduct requestOpenProduct = new()
                     {
-                        IdentificacionCliente = (long)requestData.IdentificacionCliente,
+                        IdentificacionCliente = requestData.IdentificacionCliente,
                         NumeroProducto = (long)requestData.NumeroProducto,
                         TipoProducto = (int)requestData.TipoProducto,
                         Saldo = requestData.Saldo,
